@@ -5,16 +5,26 @@
 int main()
 {
 
-	UDPReceiver* rec = new UDPReceiver();
+	//UDPReceiver* rec = new UDPReceiver();
 
-	rec->Read();
+	//rec->Read();
 
-	while (true)
+	//while (true)
+	//{
+	//	rec->Poll();
+	//	Sleep(1);
+	//}
+
+
+	//delete rec;
+
+	UDPSender* sender = new UDPSender();
+
+	for (int i = 0; i < 4; i++)
 	{
-		rec->Poll();
-		Sleep(1);
+		std::string data = std::string("Test Message");
+		sender->SendDataToClient(data);
 	}
 
-
-	delete rec;
+	delete sender;
 }

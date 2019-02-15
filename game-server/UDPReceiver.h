@@ -2,6 +2,7 @@
 #include "boost/asio.hpp"
 #include "boost/bind.hpp"
 #include "boost/array.hpp"
+#include <algorithm>
 
 using namespace boost::asio;
 
