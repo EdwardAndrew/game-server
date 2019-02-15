@@ -18,7 +18,7 @@ UDPSender::UDPSender()
 	:scket(ioservice)
 {
 	scket.open(ip::udp::v4());
-	endpoint = ip::udp::endpoint(ip::address_v4::from_string(serverIp), serverPort);
+	endpoint = ip::udp::endpoint(ip::address_v4::from_string(clientIp), clientPort);
 }
 
 void UDPSender::SendDataToClient(std::string message) 

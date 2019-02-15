@@ -21,6 +21,9 @@
     <ClInclude Include="UDPReceiver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="IncomingPacketRouter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="game-server.cpp">
@@ -30,6 +33,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="UDPReceiver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IncomingPacketRouter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

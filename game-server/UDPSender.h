@@ -17,8 +17,8 @@ private:
 	io_service ioservice;
 	ip::udp::socket scket;
 	ip::udp::endpoint endpoint;
-	const char* serverIp = "127.0.0.1";
-	const unsigned short serverPort = 1235;
+	const char* clientIp = "127.0.0.1";
+	const unsigned short clientPort = 1235;
 	static UDPSender* instance;
 };
 

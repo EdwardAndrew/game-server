@@ -1,4 +1,8 @@
 #include "UDPReceiver.h"
+#include "IncomingPacketRouter.h"
+#include <boost/shared_ptr.hpp>
+#include <boost/enable_shared_from_this.hpp>
+#include <boost/make_shared.hpp>
 
 UDPReceiver* UDPReceiver::instance;
 
@@ -11,7 +15,8 @@ void UDPReceiver::read_handler(const boost::system::error_code error, size_t byt
 	std::string data;
 	std::copy(std::begin(recv_buffer), std::begin(recv_buffer) + bytes_transferred, std::back_inserter(data));
 
-	fprintf(stdout, "%s", data.c_str());
+	IncomingPacketRouter::getInstance()->Map(data);
+
 	Read();
 }
 

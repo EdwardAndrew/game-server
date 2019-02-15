@@ -5,7 +5,6 @@
 
 bool running = true;
 
-
 void incomingStream()
 {
 	UDPReceiver* receiver = UDPReceiver::getInstance();
