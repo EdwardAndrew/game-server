@@ -1,5 +1,7 @@
 #include "UDPReceiver.h"
 
+UDPReceiver* UDPReceiver::instance;
+
 UDPReceiver* UDPReceiver::getInstance() {
 	if (instance == nullptr) instance = new UDPReceiver();
 	return instance;
