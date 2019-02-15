@@ -1,5 +1,9 @@
 #include "UDPReceiver.h"
 
+UDPReceiver* UDPReceiver::getInstance() {
+	if (instance == nullptr) instance = new UDPReceiver();
+	return instance;
+}
 
 void UDPReceiver::read_handler(const boost::system::error_code error, size_t bytes_transferred) {
 	std::string data;

@@ -9,14 +9,14 @@ using namespace boost::asio;
 class UDPReceiver
 {
 public:
-	UDPReceiver();
+	static UDPReceiver* getInstance();
 	~UDPReceiver();
 
 	void Read();
 	void Poll();
 
-
-private: 	
+private: 
+	static UDPReceiver* instance;
 	boost::array<char, 1024> recv_buffer;
 	io_service ioservice;
 	ip::udp::socket scket;
@@ -25,6 +25,7 @@ private:
 	const char* xPlaneServerIp = "127.0.0.1";
 	const unsigned short xPlaneServerPort = 1234;
 
+	UDPReceiver();
 	void read_handler(const boost::system::error_code, size_t);
 };
 

@@ -1,9 +1,12 @@
 #include "UDPSender.h"
 
+UDPSender* UDPSender::getInstance()
+{
+	if (instance == nullptr) instance = new UDPSender();
+	return instance;
+}
 
-
-void handler(const boost::system::error_code& error, // Result of operation.
-	std::size_t bytes_transferred) {
+void handler(const boost::system::error_code& error, std::size_t bytes_transferred) {
 	fprintf(stderr, "Error %s", error.message().c_str());
 	fprintf(stderr, "Code %d", error.value());
 }

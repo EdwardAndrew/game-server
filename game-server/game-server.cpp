@@ -2,29 +2,18 @@
 #include "UDPSender.h"
 #include "UDPReceiver.h"
 
+
 int main()
 {
 
-	//UDPReceiver* rec = new UDPReceiver();
+	UDPReceiver* receiver = UDPReceiver::getInstance();
+	UDPSender* sender = UDPSender::getInstance();
 
-	//rec->Read();
+	receiver->Read();
 
-	//while (true)
-	//{
-	//	rec->Poll();
-	//	Sleep(1);
-	//}
-
-
-	//delete rec;
-
-	UDPSender* sender = new UDPSender();
-
-	for (int i = 0; i < 4; i++)
+	while (true)
 	{
-		std::string data = std::string("Test Message");
-		sender->SendDataToClient(data);
+		receiver->Poll();
+		Sleep(1);
 	}
-
-	delete sender;
 }
