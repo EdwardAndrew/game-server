@@ -7,11 +7,9 @@ MessageQueue* MessageQueue::getInstance() {
 	return instance;
 }
 
-
 MessageQueue::MessageQueue()
 {
 }
-
 
 MessageQueue::~MessageQueue()
 {

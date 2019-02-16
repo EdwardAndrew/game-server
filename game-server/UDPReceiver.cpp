@@ -1,5 +1,5 @@
 #include "UDPReceiver.h"
-#include "IncomingPacketRouter.h"
+#include "PacketMapper.h"
 
 
 UDPReceiver* UDPReceiver::instance;
@@ -13,7 +13,7 @@ void UDPReceiver::read_handler(const boost::system::error_code error, size_t byt
 	std::vector<unsigned char> data;
 	std::copy(std::begin(recv_buffer), std::begin(recv_buffer) + bytes_transferred, std::back_inserter(data));
 
-	IncomingPacketRouter::getInstance()->Map(data);
+	PacketMapper::getInstance()->Map(data);
 
 	Read();
 }
@@ -39,4 +39,5 @@ void UDPReceiver::Read()
 UDPReceiver::~UDPReceiver()
 {
 	scket.close();
+	ioservice.stop();
 }

@@ -58,7 +58,7 @@ int main()
 	std::thread outgoingThread(outgoingStream);
 	std::thread waitForStopCommandThread(waitForStopCommand);
 
-	glm::vec3 pos = glm::vec3(-0.0f, 0.0f, 0.0f);
+	//glm::vec3 pos = glm::vec3(-0.0f, 0.0f, 0.0f);
 
 	std::chrono::high_resolution_clock timer;
 	float deltaTime = 0.0f;
@@ -68,13 +68,13 @@ int main()
 	{
 		if (deltaTime >= 1/10)
 		{
-			pos += glm::vec3(0.0f, 0.0f, 20.0f) * deltaTime;
+			//pos += glm::vec3(0.0f, 0.0f, 20.0f) * deltaTime;
 
-			std::vector<unsigned char> data(sizeof(pos));
-			std::memcpy(data.data(), &pos, sizeof(pos));
+			//std::vector<unsigned char> data(sizeof(pos));
+			//std::memcpy(data.data(), &pos, sizeof(pos));
 			
 			mtx.lock();
-			MessageQueue::getInstance()->Enqueue(data);
+			//MessageQueue::getInstance()->Enqueue(data);
 			mtx.unlock();
 			previousTime = timer.now();
 		}

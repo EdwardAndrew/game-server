@@ -21,16 +21,16 @@
     <ClInclude Include="UDPReceiver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IncomingPacketRouter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MessageQueue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MessageTypes.h">
+    <ClInclude Include="ConnectionHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Client.h">
+    <ClInclude Include="PacketMapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -44,10 +44,13 @@
     <ClCompile Include="UDPReceiver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IncomingPacketRouter.cpp">
+    <ClCompile Include="MessageQueue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MessageQueue.cpp">
+    <ClCompile Include="ConnectionHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PacketMapper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -155,16 +155,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Client.h" />
-    <ClInclude Include="IncomingPacketRouter.h" />
+    <ClInclude Include="ConnectionHandler.h" />
+    <ClInclude Include="PacketMapper.h" />
     <ClInclude Include="MessageQueue.h" />
-    <ClInclude Include="MessageTypes.h" />
+    <ClInclude Include="PacketTypes.h" />
     <ClInclude Include="UDPReceiver.h" />
     <ClInclude Include="UDPSender.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ConnectionHandler.cpp" />
     <ClCompile Include="game-server.cpp" />
-    <ClCompile Include="IncomingPacketRouter.cpp" />
+    <ClCompile Include="PacketMapper.cpp" />
     <ClCompile Include="MessageQueue.cpp" />
     <ClCompile Include="UDPReceiver.cpp" />
     <ClCompile Include="UDPSender.cpp" />
