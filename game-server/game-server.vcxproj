@@ -93,7 +93,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>E:\Dependencies\Boost\boost_1_65_1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\Dependencies\glm\include;E:\Dependencies\Boost\boost_1_65_1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -156,14 +156,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="IncomingPacketRouter.h" />
-    <ClInclude Include="Player.h" />
+    <ClInclude Include="MessageQueue.h" />
     <ClInclude Include="UDPReceiver.h" />
     <ClInclude Include="UDPSender.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="game-server.cpp" />
     <ClCompile Include="IncomingPacketRouter.cpp" />
-    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="MessageQueue.cpp" />
     <ClCompile Include="UDPReceiver.cpp" />
     <ClCompile Include="UDPSender.cpp" />
   </ItemGroup>

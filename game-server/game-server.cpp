@@ -2,12 +2,19 @@
 #include "UDPSender.h"
 #include "UDPReceiver.h"
 #include <thread>
+#include <mutex>
+#include <queue>
+#include <chrono>
+#include "glm/vec3.hpp"
 
 bool running = true;
+std::queue<std::vector<unsigned char>> queue;
+std::mutex mtx;
 
 void incomingStream()
 {
-	UDPReceiver* receiver = UDPReceiver::getInstance();
+	
+	std::shared_ptr<UDPReceiver> receiver = std::shared_ptr<UDPReceiver>(UDPReceiver::getInstance());
 	receiver->Read();
 
 	while (running)
@@ -18,11 +25,20 @@ void incomingStream()
 }
 
 void outgoingStream() {
-	UDPSender* sender = UDPSender::getInstance();
+	std::shared_ptr<UDPSender> sender = std::shared_ptr<UDPSender>(UDPSender::getInstance());
 
 	while (running)
 	{
-		Sleep(10);
+		while (!queue.empty())
+		{
+			mtx.lock();
+			std::vector<unsigned char> data = queue.front();
+			sender->SendDataToClient(data);
+			queue.pop();
+			mtx.unlock();
+		}
+		sender->Poll();
+		Sleep(1);
 	}
 }
 
@@ -44,9 +60,31 @@ int main()
 	std::thread outgoingThread(outgoingStream);
 	std::thread waitForStopCommandThread(waitForStopCommand);
 
+	glm::vec3 pos = glm::vec3(-0.0f, 0.0f, 0.0f);
+
+	int count = 0;
+
+	std::chrono::high_resolution_clock timer;
+	float deltaTime = 0.0f;
+	auto previousTime = timer.now();
+
 	while (running)
 	{
-		// Game Logic
+		if (deltaTime >= 1/10)
+		{
+			pos += glm::vec3(0.0f, 0.0f, 20.0f) * deltaTime;
+
+			std::vector<unsigned char> data(sizeof(pos));
+			std::memcpy(data.data(), &pos, sizeof(pos));
+			
+			mtx.lock();
+			queue.push(data);
+			mtx.unlock();
+			count++;
+			previousTime = timer.now();
+		}
+		auto stop = timer.now();
+		deltaTime = std::chrono::duration_cast<std::chrono::microseconds>(stop - previousTime).count() / 1000000.0f;
 	}
 
 	outgoingThread.join();
