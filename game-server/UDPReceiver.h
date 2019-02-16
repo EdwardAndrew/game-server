@@ -22,8 +22,7 @@ private:
 	ip::udp::socket scket;
 	ip::udp::endpoint endpoint;
 
-	const char* xPlaneServerIp = "127.0.0.1";
-	const unsigned short xPlaneServerPort = 1234;
+	const unsigned short listenPort = 1234;
 
 	UDPReceiver();
 	void read_handler(const boost::system::error_code, size_t);

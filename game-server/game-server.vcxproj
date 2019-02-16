@@ -156,12 +156,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="IncomingPacketRouter.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="UDPReceiver.h" />
     <ClInclude Include="UDPSender.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="game-server.cpp" />
     <ClCompile Include="IncomingPacketRouter.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="UDPReceiver.cpp" />
     <ClCompile Include="UDPSender.cpp" />
   </ItemGroup>

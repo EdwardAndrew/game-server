@@ -1,8 +1,6 @@
 #include "UDPReceiver.h"
 #include "IncomingPacketRouter.h"
-#include <boost/shared_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
-#include <boost/make_shared.hpp>
+
 
 UDPReceiver* UDPReceiver::instance;
 
@@ -27,7 +25,7 @@ void UDPReceiver::Poll() {
 UDPReceiver::UDPReceiver() 
 	: scket(ioservice)
 {
-	scket = ip::udp::socket(ioservice, ip::udp::endpoint(ip::udp::v4(), xPlaneServerPort));
+	scket = ip::udp::socket(ioservice, ip::udp::endpoint(ip::udp::v4(), listenPort));
 }
 
 void UDPReceiver::Read()
