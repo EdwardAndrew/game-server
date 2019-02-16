@@ -1,14 +1,13 @@
 #include <iostream>
 #include "UDPSender.h"
 #include "UDPReceiver.h"
+#include "MessageQueue.h"
 #include <thread>
 #include <mutex>
-#include <queue>
 #include <chrono>
 #include "glm/vec3.hpp"
 
 bool running = true;
-std::queue<std::vector<unsigned char>> queue;
 std::mutex mtx;
 
 void incomingStream()
@@ -25,16 +24,16 @@ void incomingStream()
 }
 
 void outgoingStream() {
-	std::shared_ptr<UDPSender> sender = std::shared_ptr<UDPSender>(UDPSender::getInstance());
+	auto sender = std::shared_ptr<UDPSender>(UDPSender::getInstance());
+	auto queue = std::shared_ptr<MessageQueue>(MessageQueue::getInstance());
 
 	while (running)
 	{
-		while (!queue.empty())
+		while (!queue->isEmpty())
 		{
 			mtx.lock();
-			std::vector<unsigned char> data = queue.front();
+			std::vector<unsigned char> data = queue->Dequeue();
 			sender->SendDataToClient(data);
-			queue.pop();
 			mtx.unlock();
 		}
 		sender->Poll();
@@ -53,7 +52,6 @@ void waitForStopCommand()
 	}
 }
 
-
 int main()
 {
 	std::thread incomingThread(incomingStream);
@@ -61,8 +59,6 @@ int main()
 	std::thread waitForStopCommandThread(waitForStopCommand);
 
 	glm::vec3 pos = glm::vec3(-0.0f, 0.0f, 0.0f);
-
-	int count = 0;
 
 	std::chrono::high_resolution_clock timer;
 	float deltaTime = 0.0f;
@@ -78,9 +74,8 @@ int main()
 			std::memcpy(data.data(), &pos, sizeof(pos));
 			
 			mtx.lock();
-			queue.push(data);
+			MessageQueue::getInstance()->Enqueue(data);
 			mtx.unlock();
-			count++;
 			previousTime = timer.now();
 		}
 		auto stop = timer.now();

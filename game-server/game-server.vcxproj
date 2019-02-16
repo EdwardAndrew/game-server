@@ -155,8 +155,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Client.h" />
     <ClInclude Include="IncomingPacketRouter.h" />
     <ClInclude Include="MessageQueue.h" />
+    <ClInclude Include="MessageTypes.h" />
     <ClInclude Include="UDPReceiver.h" />
     <ClInclude Include="UDPSender.h" />
   </ItemGroup>

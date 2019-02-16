@@ -7,9 +7,13 @@ IncomingPacketRouter* IncomingPacketRouter::getInstance() {
 	return instance;
 }
 
-void IncomingPacketRouter::Map(std::string request)
+void IncomingPacketRouter::Map(const std::vector<unsigned char> request)
 {
-	std::cout << request.c_str() << std::endl;
+	switch (static_cast<MessageTypes>(request[0])) {
+	case MessageTypes::CLIENT_REQUEST_CONNECT:
+		std::cout << "Cleint requests connection" << std::endl;
+		break;
+	}
 }
 
 IncomingPacketRouter::IncomingPacketRouter()

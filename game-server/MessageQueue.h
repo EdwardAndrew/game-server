@@ -4,13 +4,19 @@
 class MessageQueue
 {
 public:
-	MessageQueue();
+	static MessageQueue* getInstance();
+
 	~MessageQueue();
 
-	void Enqueue(std::string message);
-	std::string Dequeue();
+	void Enqueue(std::vector<unsigned char> message);
+	void Enqueue(void* data, size_t size);
+	bool isEmpty() { return queue.empty(); }
+
+	std::vector<unsigned char> Dequeue();
 
 private:
-	std::queue<std::string> queue;
+	static MessageQueue* instance;
+	MessageQueue();
+	std::queue<std::vector<unsigned char>> queue;
 };
 
