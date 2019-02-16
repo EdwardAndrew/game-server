@@ -1,0 +1,11 @@
+#pragma once
+
+enum ClientState
+{
+	DISCONNECTED,
+	REQUESTED_CONNECTION,
+	CHALLENGED,
+	ACCEPTED_CHALLENGE,
+	CONNECTED
+};
+

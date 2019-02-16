@@ -1,5 +1,7 @@
 #pragma once
 #include <queue>
+#include <vector>
+#include "Client.h"
 
 class MessageQueue
 {
@@ -8,15 +10,15 @@ public:
 
 	~MessageQueue();
 
-	void Enqueue(std::vector<unsigned char> message);
-	void Enqueue(void* data, size_t size);
-	bool isEmpty() { return queue.empty(); }
+	void Enqueue(const Client client, const std::vector<unsigned char> message);
+	void Enqueue(const Client client, const void* data, const size_t size);
+	bool isEmpty() const { return queue.empty(); }
 
-	std::vector<unsigned char> Dequeue();
+	std::pair<Client, std::vector<unsigned char>> Dequeue();
 
 private:
 	static MessageQueue* instance;
 	MessageQueue();
-	std::queue<std::vector<unsigned char>> queue;
+	std::queue<std::pair<Client, std::vector<unsigned char>>> queue;
 };
 

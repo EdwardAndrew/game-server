@@ -19,7 +19,7 @@ void incomingStream()
 	while (running)
 	{
 		receiver->Poll();
-		Sleep(1);
+		Sleep(8);
 	}
 }
 
@@ -32,12 +32,12 @@ void outgoingStream() {
 		while (!queue->isEmpty())
 		{
 			mtx.lock();
-			std::vector<unsigned char> data = queue->Dequeue();
-			sender->SendDataToClient(data);
+			auto clientMessage = queue->Dequeue();
+			sender->SendDataToClient(clientMessage.first, clientMessage.second);
 			mtx.unlock();
 		}
 		sender->Poll();
-		Sleep(1);
+		Sleep(8);
 	}
 }
 

@@ -15,22 +15,22 @@ MessageQueue::~MessageQueue()
 {
 }
 
-void MessageQueue::Enqueue(std::vector<unsigned char> message)
+void MessageQueue::Enqueue(const Client client, const std::vector<unsigned char> message)
 {
-	queue.push(message);
+	queue.push(std::pair<Client, std::vector<unsigned char>>(client, message));
 }
 
-void MessageQueue::Enqueue(void * data, size_t size)
+void MessageQueue::Enqueue(const Client client, const void * data, const size_t size)
 {
 	std::vector<unsigned char> buffer(sizeof(size));
 	std::memcpy(buffer.data(), &data, sizeof(size));
 
-	queue.push(buffer);
+	queue.push(std::pair<Client, std::vector<unsigned char>>(client, buffer));
 }
 
-std::vector<unsigned char> MessageQueue::Dequeue()
+std::pair<Client, std::vector<unsigned char>> MessageQueue::Dequeue()
 {
-	std::vector<unsigned char> value = queue.front();
+	std::pair<Client, std::vector<unsigned char>> value = queue.front();
 	queue.pop();
 
 	return value;

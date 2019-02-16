@@ -8,17 +8,17 @@ PacketMapper* PacketMapper::getInstance() {
 	return instance;
 }
 
-void PacketMapper::Map(const std::vector<unsigned char> packet)
+void PacketMapper::Map(const ip::udp::endpoint endpoint, std::vector<unsigned char> packet) const
 {
 	switch (static_cast<PacketTypes>(packet[0])) {
 		case PacketTypes::CLIENT_REQUEST_CONNECT:
-			ConnectionHandler::getInstance()->ClientRequestConnection(packet);
+			ConnectionHandler::getInstance()->ClientRequestConnection(endpoint, packet);
 			break;
 		case PacketTypes::CLIENT_ACCEPTS_CHALLENGE:
-			ConnectionHandler::getInstance()->ClientAcceptChallenge(packet);
+			ConnectionHandler::getInstance()->ClientAcceptChallenge(endpoint, packet);
 			break;
 		case PacketTypes::CLIENT_KEEP_ALIVE:
-			ConnectionHandler::getInstance()->ClientAcknowledgeKeepAlive(packet);
+			ConnectionHandler::getInstance()->ClientAcknowledgeKeepAlive(endpoint, packet);
 			break;
 		default:
 			fprintf(stderr, "Failed to map incoming packet\n");

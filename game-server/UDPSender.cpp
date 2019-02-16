@@ -1,5 +1,5 @@
 #include "UDPSender.h"
-
+#include <iostream>
 UDPSender* UDPSender::instance;
 
 UDPSender* UDPSender::getInstance()
@@ -18,17 +18,16 @@ UDPSender::UDPSender()
 {
 
 	scket.open(ip::udp::v4());
-	endpoint = ip::udp::endpoint(ip::address_v4::from_string(clientIp), clientPort);
 }
 
-void UDPSender::SendDataToClient(const std::vector<unsigned char> message) 
+void UDPSender::SendDataToClient(const Client client,const std::vector<unsigned char> message) 
 {
 	if (message.size() > 1024)
 	{
 		throw std::exception("Message too large to fit in buffer");
 	}
 
-	scket.async_send_to(buffer(&message[0], message.size()), endpoint, 0,
+	scket.async_send_to(buffer(&message[0], message.size()), client.endpoint, 0,
 		boost::bind(&UDPSender::write_handler, this, 
 			boost::asio::placeholders::error,
 			boost::asio::placeholders::bytes_transferred));
