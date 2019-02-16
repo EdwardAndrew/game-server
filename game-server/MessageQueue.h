@@ -2,6 +2,7 @@
 #include <queue>
 #include <vector>
 #include "Client.h"
+#include <mutex>
 
 class MessageQueue
 {
@@ -10,15 +11,16 @@ public:
 
 	~MessageQueue();
 
-	void Enqueue(const Client client, const std::vector<unsigned char> message);
-	void Enqueue(const Client client, const void* data, const size_t size);
+	void Enqueue(const std::shared_ptr<Client> client, const std::vector<unsigned char> message);
+	void Enqueue(const std::shared_ptr<Client> client, const void* data, const size_t size);
 	bool isEmpty() const { return queue.empty(); }
 
-	std::pair<Client, std::vector<unsigned char>> Dequeue();
+	std::pair<std::shared_ptr<Client>, std::vector<unsigned char>> Dequeue();
 
 private:
+	std::mutex mtx;
 	static MessageQueue* instance;
 	MessageQueue();
-	std::queue<std::pair<Client, std::vector<unsigned char>>> queue;
+	std::queue<std::pair<std::shared_ptr<Client>, std::vector<unsigned char>>> queue;
 };
 

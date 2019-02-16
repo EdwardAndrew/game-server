@@ -2,13 +2,12 @@
 #include "UDPSender.h"
 #include "UDPReceiver.h"
 #include "MessageQueue.h"
+#include "ConnectionHandler.h"
 #include <thread>
-#include <mutex>
 #include <chrono>
 #include "glm/vec3.hpp"
 
 bool running = true;
-std::mutex mtx;
 
 void incomingStream()
 {
@@ -19,7 +18,7 @@ void incomingStream()
 	while (running)
 	{
 		receiver->Poll();
-		Sleep(8);
+		Sleep(1);
 	}
 }
 
@@ -31,13 +30,11 @@ void outgoingStream() {
 	{
 		while (!queue->isEmpty())
 		{
-			mtx.lock();
 			auto clientMessage = queue->Dequeue();
 			sender->SendDataToClient(clientMessage.first, clientMessage.second);
-			mtx.unlock();
 		}
 		sender->Poll();
-		Sleep(8);
+		Sleep(1);
 	}
 }
 
@@ -54,12 +51,11 @@ void waitForStopCommand()
 
 int main()
 {
+	auto connectionHandler = std::shared_ptr<ConnectionHandler>(ConnectionHandler::getInstance());
+	auto messageQueue = std::shared_ptr<MessageQueue>(MessageQueue::getInstance());
 	std::thread incomingThread(incomingStream);
 	std::thread outgoingThread(outgoingStream);
 	std::thread waitForStopCommandThread(waitForStopCommand);
-
-	//glm::vec3 pos = glm::vec3(-0.0f, 0.0f, 0.0f);
-
 	std::chrono::high_resolution_clock timer;
 	float deltaTime = 0.0f;
 	auto previousTime = timer.now();
@@ -67,21 +63,31 @@ int main()
 	while (running)
 	{
 		if (deltaTime >= 1/10)
-		{
-			//pos += glm::vec3(0.0f, 0.0f, 20.0f) * deltaTime;
+		{		
+			auto clients = connectionHandler->GetClients();
+			for(auto client : clients)
+			{ 
+				std::vector<unsigned char> packet;
+				if (client->clientState != ClientState::CONNECTED) continue;
 
-			//std::vector<unsigned char> data(sizeof(pos));
-			//std::memcpy(data.data(), &pos, sizeof(pos));
-			
-			mtx.lock();
-			//MessageQueue::getInstance()->Enqueue(data);
-			mtx.unlock();
-			previousTime = timer.now();
+				packet.push_back(PacketTypes::SERVER_CLIENT_SNAPSHOT);
+				packet.push_back((unsigned char)(clients.size() - 1));
+				auto clientPlayerSnapshot = client->player->GetSnapshot();
+				packet.insert(packet.end(), clientPlayerSnapshot.begin(), clientPlayerSnapshot.end());
+				
+				for (auto otherClient : clients) {
+					if (otherClient == client) continue;
+					auto playerSnapshot = otherClient->player->GetSnapshot();
+					packet.insert(std::end(packet), std::begin(playerSnapshot), std::end(playerSnapshot));
+				}
+				messageQueue->Enqueue(client, packet);
+			}
 		}
+		previousTime = timer.now();
+		
 		auto stop = timer.now();
 		deltaTime = std::chrono::duration_cast<std::chrono::microseconds>(stop - previousTime).count() / 1000000.0f;
 	}
-
 	outgoingThread.join();
 	incomingThread.join();
 	waitForStopCommandThread.join();

@@ -13,7 +13,7 @@ public:
 	static UDPSender* getInstance();
 	~UDPSender();
 	void Poll();
-	void SendDataToClient(Client client, std::vector<unsigned char> data);
+	void SendDataToClient(std::shared_ptr<Client> client, std::vector<unsigned char> data);
 private:
 	UDPSender();
 	io_service ioservice;

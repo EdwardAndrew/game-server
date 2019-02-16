@@ -20,12 +20,16 @@ public:
 
 	void ClientAcknowledgeKeepAlive(const ip::udp::endpoint endpoint, const std::vector<unsigned char> packet) const;
 
+	void ClientSentSnapshot(const ip::udp::endpoint endpoint, const std::vector<unsigned char> packet) const;
+
+	const std::vector<std::shared_ptr<Client>> GetClients() const { return clients; }
+
 private:
 	ConnectionHandler();
 	static ConnectionHandler* instance;
 
-	std::vector<Client> clients;
+	std::vector<std::shared_ptr<Client>> clients;
 
-	const std::tuple<bool, Client> getClientByEndpoint(const ip::udp::endpoint) const;
+	const std::tuple<bool, std::shared_ptr<Client>> getClientByEndpoint(const ip::udp::endpoint) const;
 };
 

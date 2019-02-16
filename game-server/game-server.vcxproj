@@ -161,6 +161,7 @@
     <ClInclude Include="PacketMapper.h" />
     <ClInclude Include="MessageQueue.h" />
     <ClInclude Include="PacketTypes.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="UDPReceiver.h" />
     <ClInclude Include="UDPSender.h" />
   </ItemGroup>
@@ -169,6 +170,7 @@
     <ClCompile Include="game-server.cpp" />
     <ClCompile Include="PacketMapper.cpp" />
     <ClCompile Include="MessageQueue.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="UDPReceiver.cpp" />
     <ClCompile Include="UDPSender.cpp" />
   </ItemGroup>
