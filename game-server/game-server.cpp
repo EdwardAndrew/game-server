@@ -100,11 +100,11 @@ int main()
 		deltaTime = d.count() - elapsedTime;
 		elapsedTime = d.count();
 
-		int msUntilNextTick = static_cast<unsigned char>(floor((((1.0f / TICKRATE) - (elapsedTime - lastTickTime))*1000)-0.5f));
-		if (msUntilNextTick > 0)
-		{
-			Sleep(msUntilNextTick);
-		}
+		//int msUntilNextTick = static_cast<unsigned char>(floor((((1.0f / TICKRATE) - (elapsedTime - lastTickTime))*1000)-0.5f));
+		//if (msUntilNextTick > 0)
+		//{
+		//	Sleep(msUntilNextTick);
+		//}
 	}
 	outgoingThread.join();
 	incomingThread.join();
