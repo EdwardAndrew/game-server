@@ -23,6 +23,7 @@ void ConnectionHandler::ClientRequestConnection(const ip::udp::endpoint endpoint
 	{
 		requestedClient->endpoint = endpoint;
 		requestedClient->clientState = ClientState::REQUESTED_CONNECTION;
+		requestedClient->SetId();
 		clients.push_back(requestedClient);
 	}
 

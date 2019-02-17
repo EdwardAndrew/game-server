@@ -1,5 +1,5 @@
 #include "Player.h"
-
+#include <string>
 Player::Player()
 {
 	position = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -39,4 +39,16 @@ const std::vector<unsigned char> Player::GetSnapshot()
 	return snapshot_bytes;
 }
 
+const std::string Player::ToString() const 
+{
+	std::string result;
 
+	result = std::string("P: "
+		+ std::to_string(position.x) + " "
+		+ std::to_string(position.y) + " "
+		+ std::to_string(position.z) + "R: "
+		+ std::to_string(rotation.x) + " "
+		+ std::to_string(rotation.y) + " "
+		+ std::to_string(rotation.z));
+	return result;
+}

@@ -80,14 +80,16 @@ int main()
 
 				packet.push_back(PacketTypes::SERVER_CLIENT_SNAPSHOT);
 				packet.push_back(static_cast<unsigned char>(clients.size() - 1));
-				packet.push_back(static_cast<unsigned char>(client->id));
+				packet.push_back(static_cast<unsigned char>(client->GetId()));
 				auto clientPlayerSnapshot = client->player->GetSnapshot();
 				packet.insert(packet.end(), clientPlayerSnapshot.begin(), clientPlayerSnapshot.end());
 				
+				fprintf(stdout, "%s\n", client->player->ToString().c_str());
+
 				for (auto otherClient : clients) {
 					if (otherClient == client) continue;
 					auto playerSnapshot = otherClient->player->GetSnapshot();
-					packet.push_back(static_cast<unsigned char>(otherClient->id));
+					packet.push_back(static_cast<unsigned char>(otherClient->GetId()));
 					packet.insert(packet.end(), playerSnapshot.begin(), playerSnapshot.end());
 				}
 				messageQueue->Enqueue(client, packet);
