@@ -84,7 +84,7 @@ int main()
 				auto clientPlayerSnapshot = client->player->GetSnapshot();
 				packet.insert(packet.end(), clientPlayerSnapshot.begin(), clientPlayerSnapshot.end());
 				
-				fprintf(stdout, "%s\n", client->player->ToString().c_str());
+				//fprintf(stdout, "%s\n", client->player->ToString().c_str());
 
 				for (auto otherClient : clients) {
 					if (otherClient == client) continue;
