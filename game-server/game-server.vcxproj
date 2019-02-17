@@ -167,6 +167,7 @@
     <ClInclude Include="UDPSender.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Client.cpp" />
     <ClCompile Include="ConnectionHandler.cpp" />
     <ClCompile Include="game-server.cpp" />
     <ClCompile Include="PacketMapper.cpp" />

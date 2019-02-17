@@ -12,11 +12,13 @@ public:
 	
 	Client()
 		: player{ std::unique_ptr<Player>(new Player()) }
+		, id {GetNextId()}
 		{};
 
 	ip::udp::endpoint endpoint;
 	ClientState clientState = ClientState::DISCONNECTED;
 	std::unique_ptr<Player> player;
+	const unsigned short id;
 
 	bool operator==(const Client& rhs) const
 	{
@@ -43,6 +45,7 @@ public:
 
 private:
 	float timeSinceLastPacketReceived = 0.0f;
-
+	static unsigned short id_counter;
+	static const unsigned short GetNextId() { id_counter++; return id_counter; };
 };
 
