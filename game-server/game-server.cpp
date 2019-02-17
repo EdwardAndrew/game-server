@@ -79,15 +79,15 @@ int main()
 				if (client->clientState != ClientState::CONNECTED) continue;
 
 				packet.push_back(PacketTypes::SERVER_CLIENT_SNAPSHOT);
-				packet.push_back((unsigned char)(clients.size() - 1));
-				packet.push_back((unsigned char)client->id);
+				packet.push_back(static_cast<unsigned char>(clients.size() - 1));
+				packet.push_back(static_cast<unsigned char>(client->id));
 				auto clientPlayerSnapshot = client->player->GetSnapshot();
 				packet.insert(packet.end(), clientPlayerSnapshot.begin(), clientPlayerSnapshot.end());
 				
 				for (auto otherClient : clients) {
 					if (otherClient == client) continue;
 					auto playerSnapshot = otherClient->player->GetSnapshot();
-					packet.push_back((unsigned char)otherClient->id);
+					packet.push_back(static_cast<unsigned char>(otherClient->id));
 					packet.insert(packet.end(), playerSnapshot.begin(), playerSnapshot.end());
 				}
 				messageQueue->Enqueue(client, packet);
@@ -98,7 +98,7 @@ int main()
 		deltaTime = d.count() - elapsedTime;
 		elapsedTime = d.count();
 
-		int msUntilNextTick = (int)floor((((1.0f / TICKRATE) - (elapsedTime - lastTickTime))*1000)-0.5f);
+		int msUntilNextTick = static_cast<unsigned char>(floor((((1.0f / TICKRATE) - (elapsedTime - lastTickTime))*1000)-0.5f));
 		if (msUntilNextTick > 0)
 		{
 			Sleep(msUntilNextTick);
