@@ -44,10 +44,10 @@ void waitForStopCommand()
 {
 	std::cout << "Server is running, enter STOP to quit" << std::endl;
 	while (running) {
+		Sleep(100);
 		std::string input;
 		std::cin >> input;
 		if (input == "STOP" || input == "stop" || input == "s" || input == "Stop") running = false;
-		Sleep(100);
 	}
 }
 

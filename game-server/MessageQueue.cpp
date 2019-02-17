@@ -9,7 +9,6 @@ MessageQueue* MessageQueue::getInstance() {
 
 MessageQueue::MessageQueue()
 {
-	std::mutex mtx;
 }
 
 MessageQueue::~MessageQueue()
