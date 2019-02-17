@@ -1,16 +1,20 @@
-#include <iostream>
+#include "Config.h"
 #include "UDPSender.h"
 #include "UDPReceiver.h"
 #include "MessageQueue.h"
 #include "ConnectionHandler.h"
+#include <iostream>
 #include <thread>
 #include <chrono>
 #include "glm/vec3.hpp"
-#include "Config.h"
+
 
 bool running = true;
 
-using ms = std::chrono::duration<float, std::milli>;
+using Time = std::chrono::high_resolution_clock;
+using ms = std::chrono::milliseconds;
+using float_sec = std::chrono::duration<float>;
+using float_time_point = std::chrono::time_point<Time, float_sec>;
 
 void incomingStream()
 {	
@@ -42,7 +46,7 @@ void outgoingStream() {
 
 void waitForStopCommand()
 {
-	std::cout << "Server is running, enter STOP to quit" << std::endl;
+	fprintf(stdout, "Server is running, enter STOP to quit\n");
 	while (running) {
 		Sleep(100);
 		std::string input;
@@ -58,14 +62,16 @@ int main()
 	std::thread incomingThread(incomingStream);
 	std::thread outgoingThread(outgoingStream);
 	std::thread waitForStopCommandThread(waitForStopCommand);
-	std::chrono::high_resolution_clock timer;
+
+	float elapsedTime = 0.0f;
 	float deltaTime = 0.0f;
-	float timeSinceLastTick = 0.0f;
+	float lastTickTime = 0.0f;
+	auto start = Time::now();
 	while (running)
 	{
-		auto start = timer.now();
-		if (timeSinceLastTick > (1.0f/5.0f))
+		if (elapsedTime - lastTickTime > (1.0f/TICKRATE))
 		{		
+			connectionHandler->Step(deltaTime);
 			auto clients = connectionHandler->GetClients();
 			for(auto client : clients)
 			{ 
@@ -84,13 +90,17 @@ int main()
 				}
 				messageQueue->Enqueue(client, packet);
 			}
-			timeSinceLastTick = 0.0f;
+			lastTickTime = elapsedTime;
 		}
+		float_sec d = (Time::now() - start);
+		deltaTime = d.count() - elapsedTime;
+		elapsedTime = d.count();
 
-		connectionHandler->Step(deltaTime);
-
-		deltaTime = std::chrono::duration_cast<ms>(timer.now() - start).count() / 1000;
-		timeSinceLastTick += deltaTime;
+		int msUntilNextTick = floor((((1.0f / TICKRATE) - (elapsedTime - lastTickTime))*1000)-0.5f);
+		if (msUntilNextTick > 0)
+		{
+			Sleep(msUntilNextTick);
+		}
 	}
 	outgoingThread.join();
 	incomingThread.join();

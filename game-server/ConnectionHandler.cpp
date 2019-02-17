@@ -97,18 +97,21 @@ const std::tuple<bool, std::shared_ptr<Client>> ConnectionHandler::getClientByEn
 
 }
 
-void ConnectionHandler::Step(float deltaTime)
+void ConnectionHandler::Step(const float deltaTime)
 {
-	std::vector<std::shared_ptr<Client>> timedOutClients;
-
-	for_each(begin(clients), end(clients), [deltaTime, timedOutClients](std::shared_ptr<Client> client) mutable {
+	for_each(begin(clients), end(clients), [deltaTime](std::shared_ptr<Client> client) mutable {
 		client->Step(deltaTime);
-		if (client->HasTimedOut()) {
-			timedOutClients.push_back(client);
-			// TODO: Remove timed out client from clients list.
-		}
 	});
 
+	std::vector<std::shared_ptr<Client>>::iterator it = std::find_if(begin(clients), end(clients), [](auto client) {
+		return client->HasTimedOut();
+	});
+	if (it != end(clients))
+	{
+		fprintf(stdout, "Client: %s timed out.\n", (*it)->ToString().c_str());
+		// delete it
+		it = clients.erase(it);
+	}
 }
 
 ConnectionHandler::ConnectionHandler()

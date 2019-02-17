@@ -33,8 +33,12 @@ public:
 
 	const bool HasTimedOut() const { return timeSinceLastPacketReceived >= CLIENT_TIMEOUT; }
 
-	void Step(float deltaTime) {
+	void Step(const float deltaTime) {
 		timeSinceLastPacketReceived += deltaTime;
+	}
+
+	std::string ToString() {
+		return endpoint.address().to_string() + ":" + std::to_string(endpoint.port());
 	}
 
 private:
