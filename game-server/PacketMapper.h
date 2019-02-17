@@ -1,8 +1,8 @@
 #pragma once
-#include "boost/asio.hpp"
-#include <iostream>
-#include <vector>
 #include "PacketTypes.h"
+#include "boost/asio.hpp"
+#include <vector>
+
 
 using namespace boost::asio;
 

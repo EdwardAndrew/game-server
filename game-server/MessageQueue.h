@@ -1,7 +1,7 @@
 #pragma once
+#include "Client.h"
 #include <queue>
 #include <vector>
-#include "Client.h"
 #include <mutex>
 
 class MessageQueue

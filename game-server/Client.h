@@ -1,8 +1,8 @@
 #pragma once
-#include "boost/asio.hpp"
 #include "ClientState.h"
 #include "Player.h"
 #include "Config.h"
+#include "boost/asio.hpp"
 
 using namespace boost::asio;
 

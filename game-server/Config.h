@@ -1,2 +1,2 @@
 #define CLIENT_TIMEOUT 5.0f
-#define TICKRATE 10.0f
+#define TICKRATE 60.0f

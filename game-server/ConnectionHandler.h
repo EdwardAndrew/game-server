@@ -1,7 +1,7 @@
 #pragma once
-#include "boost/asio.hpp"
 #include "Client.h"
 #include "ClientState.h"
+#include "boost/asio.hpp"
 #include <vector>
 #include <algorithm>
 #include <tuple>

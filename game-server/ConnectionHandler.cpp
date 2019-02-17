@@ -31,7 +31,7 @@ void ConnectionHandler::ClientRequestConnection(const ip::udp::endpoint endpoint
 	requestedClient->clientState = ClientState::CHALLENGED;
 	requestedClient->PacketReceived();
 
-	fprintf(stdout, "Server Challenge client\n");
+	fprintf(stdout, "%s Requested Connection\n", requestedClient->ToString().c_str());
 	MessageQueue::getInstance()->Enqueue(requestedClient, response);
 }
 

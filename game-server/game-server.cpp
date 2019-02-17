@@ -80,8 +80,8 @@ int main()
 
 				packet.push_back(PacketTypes::SERVER_CLIENT_SNAPSHOT);
 				packet.push_back((unsigned char)(clients.size() - 1));
-				auto clientPlayerSnapshot = client->player->GetSnapshot();
-				packet.insert(packet.end(), clientPlayerSnapshot.begin(), clientPlayerSnapshot.end());
+				//auto clientPlayerSnapshot = client->player->GetSnapshot();
+				//packet.insert(packet.end(), clientPlayerSnapshot.begin(), clientPlayerSnapshot.end());
 				
 				for (auto otherClient : clients) {
 					if (otherClient == client) continue;

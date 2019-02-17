@@ -1,8 +1,7 @@
 #pragma once
-
+#include "PacketTypes.h"
 #include <vector>
 #include "glm/vec3.hpp"
-#include "PacketTypes.h"
 
 class Player
 {

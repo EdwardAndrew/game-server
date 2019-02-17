@@ -1,5 +1,4 @@
 #include "UDPSender.h"
-#include <iostream>
 UDPSender* UDPSender::instance;
 
 UDPSender* UDPSender::getInstance()

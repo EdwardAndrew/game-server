@@ -1,6 +1,5 @@
 #include "UDPReceiver.h"
 #include "PacketMapper.h"
-#include <iostream>
 
 UDPReceiver* UDPReceiver::instance;
 
