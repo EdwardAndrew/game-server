@@ -6,12 +6,14 @@
 #include <thread>
 #include <chrono>
 #include "glm/vec3.hpp"
+#include "Config.h"
 
 bool running = true;
 
+using ms = std::chrono::duration<float, std::milli>;
+
 void incomingStream()
-{
-	
+{	
 	std::shared_ptr<UDPReceiver> receiver = std::shared_ptr<UDPReceiver>(UDPReceiver::getInstance());
 	receiver->Read();
 
@@ -32,8 +34,8 @@ void outgoingStream() {
 		{
 			auto clientMessage = queue->Dequeue();
 			sender->SendDataToClient(clientMessage.first, clientMessage.second);
+			sender->Poll();
 		}
-		sender->Poll();
 		Sleep(1);
 	}
 }
@@ -58,11 +60,11 @@ int main()
 	std::thread waitForStopCommandThread(waitForStopCommand);
 	std::chrono::high_resolution_clock timer;
 	float deltaTime = 0.0f;
-	auto previousTime = timer.now();
-
+	float timeSinceLastTick = 0.0f;
 	while (running)
 	{
-		if (deltaTime >= 1/10)
+		auto start = timer.now();
+		if (timeSinceLastTick > (1.0f/5.0f))
 		{		
 			auto clients = connectionHandler->GetClients();
 			for(auto client : clients)
@@ -78,15 +80,17 @@ int main()
 				for (auto otherClient : clients) {
 					if (otherClient == client) continue;
 					auto playerSnapshot = otherClient->player->GetSnapshot();
-					packet.insert(std::end(packet), std::begin(playerSnapshot), std::end(playerSnapshot));
+					packet.insert(packet.end(), playerSnapshot.begin(), playerSnapshot.end());
 				}
 				messageQueue->Enqueue(client, packet);
 			}
+			timeSinceLastTick = 0.0f;
 		}
-		previousTime = timer.now();
-		
-		auto stop = timer.now();
-		deltaTime = std::chrono::duration_cast<std::chrono::microseconds>(stop - previousTime).count() / 1000000.0f;
+
+		connectionHandler->Step(deltaTime);
+
+		deltaTime = std::chrono::duration_cast<ms>(timer.now() - start).count() / 1000;
+		timeSinceLastTick += deltaTime;
 	}
 	outgoingThread.join();
 	incomingThread.join();

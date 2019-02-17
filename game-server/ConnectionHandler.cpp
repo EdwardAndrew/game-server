@@ -29,6 +29,7 @@ void ConnectionHandler::ClientRequestConnection(const ip::udp::endpoint endpoint
 	std::vector<unsigned char> response;
 	response.push_back(PacketTypes::SERVER_CHALLENGE_CLIENT);
 	requestedClient->clientState = ClientState::CHALLENGED;
+	requestedClient->PacketReceived();
 
 	fprintf(stdout, "Server Challenge client\n");
 	MessageQueue::getInstance()->Enqueue(requestedClient, response);
@@ -38,7 +39,7 @@ void ConnectionHandler::ClientAcceptChallenge(const ip::udp::endpoint endpoint, 
 {
 	auto clientTuple = getClientByEndpoint(endpoint);
 	if (std::get<0>(clientTuple) == false) {
-		fprintf(stderr, "The client that accepted the challenge is not registered");
+		fprintf(stderr, "The client that accepted the challenge is not registered\n");
 		return;
 	}
 
@@ -46,6 +47,7 @@ void ConnectionHandler::ClientAcceptChallenge(const ip::udp::endpoint endpoint, 
 	response.push_back(PacketTypes::SERVER_ACCEPT_CLIENT);
 
 	std::get<1>(clientTuple)->clientState = ClientState::CONNECTED;
+	std::get<1>(clientTuple)->PacketReceived();
 
 	fprintf(stdout, "Server Accepts Client\n");
 
@@ -61,6 +63,7 @@ void ConnectionHandler::ClientAcknowledgeKeepAlive(const ip::udp::endpoint endpo
 	}
 
 	std::get<1>(clientTuple)->clientState = ClientState::CONNECTED;
+	std::get<1>(clientTuple)->PacketReceived();
 
 	std::vector<unsigned char> response;
 	response.push_back(PacketTypes::SERVER_ACKNOWLEDGE_ALIVE);
@@ -72,10 +75,11 @@ void ConnectionHandler::ClientSentSnapshot(const ip::udp::endpoint endpoint, con
 {
 	auto clientTuple = getClientByEndpoint(endpoint);
 	if (std::get<0>(clientTuple) == false) {
-		fprintf(stderr, "The Snapshot came from a client not registered.");
+		fprintf(stderr, "The Snapshot came from a client not registered.\n");
 		return;
 	}
 
+	std::get<1>(clientTuple)->PacketReceived();
 	std::get<1>(clientTuple)->player->MapClientSnapshot(packet);
 }
 
@@ -90,6 +94,20 @@ const std::tuple<bool, std::shared_ptr<Client>> ConnectionHandler::getClientByEn
 	});
 
 	return found != clients.end() ? std::tuple<bool, std::shared_ptr<Client>>(true, *found) : std::tuple<bool, std::shared_ptr<Client>>(false, dummyValue);
+
+}
+
+void ConnectionHandler::Step(float deltaTime)
+{
+	std::vector<std::shared_ptr<Client>> timedOutClients;
+
+	for_each(begin(clients), end(clients), [deltaTime, timedOutClients](std::shared_ptr<Client> client) mutable {
+		client->Step(deltaTime);
+		if (client->HasTimedOut()) {
+			timedOutClients.push_back(client);
+			// TODO: Remove timed out client from clients list.
+		}
+	});
 
 }
 

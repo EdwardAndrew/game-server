@@ -7,6 +7,10 @@
 #include <tuple>
 
 using namespace boost::asio;
+using std::for_each;
+using std::begin;
+using std::end;
+
 
 class ConnectionHandler
 {
@@ -23,6 +27,8 @@ public:
 	void ClientSentSnapshot(const ip::udp::endpoint endpoint, const std::vector<unsigned char> packet) const;
 
 	const std::vector<std::shared_ptr<Client>> GetClients() const { return clients; }
+
+	void Step(float deltaTime);
 
 private:
 	ConnectionHandler();

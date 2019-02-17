@@ -157,6 +157,7 @@
   <ItemGroup>
     <ClInclude Include="Client.h" />
     <ClInclude Include="ClientState.h" />
+    <ClInclude Include="Config.h" />
     <ClInclude Include="ConnectionHandler.h" />
     <ClInclude Include="PacketMapper.h" />
     <ClInclude Include="MessageQueue.h" />

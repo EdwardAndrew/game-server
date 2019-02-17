@@ -2,7 +2,7 @@
 
 Player::Player()
 {
-	position = glm::vec3(0.0f, 0.0f, -10.0f);
+	position = glm::vec3(0.0f, 0.0f, 0.0f);
 	rotation = glm::vec3(0.0f, 0.0f, 0.0f);
 }
 
@@ -33,7 +33,8 @@ const std::vector<unsigned char> Player::GetSnapshot()
 		sizeof(rotation);
 
 	std::vector<unsigned char> snapshot_bytes(snapshot_size);
-	std::memcpy(snapshot_bytes.data(), &snapshot_bytes, snapshot_size);
+	std::memcpy(&snapshot_bytes[0], &position[0], sizeof(position));
+	std::memcpy(&snapshot_bytes[12], &rotation[0], sizeof(rotation));
 
 	return snapshot_bytes;
 }

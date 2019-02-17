@@ -10,7 +10,8 @@ UDPSender* UDPSender::getInstance()
 
 void UDPSender::write_handler(const boost::system::error_code& error, std::size_t bytes_transferred)
 {
-	//fprintf(st, "Wrote %d bytes.", bytes_transferred);
+	//fprintf(stdout, "Wrote %d bytes.", bytes_transferred);
+	ioservice.reset();
 }
 
 UDPSender::UDPSender()
@@ -26,7 +27,7 @@ void UDPSender::SendDataToClient(const std::shared_ptr<Client> client, const std
 		throw std::exception("Message too large to fit in buffer");
 	}
 
-	scket.async_send_to(buffer(&message[0], sizeof(message)), client->endpoint, 0,
+	scket.async_send_to(buffer(&message[0], message.size()), client->endpoint, 0,
 		boost::bind(&UDPSender::write_handler, this, 
 			boost::asio::placeholders::error,
 			boost::asio::placeholders::bytes_transferred));
