@@ -84,6 +84,17 @@ void ConnectionHandler::ClientSentSnapshot(const ip::udp::endpoint endpoint, con
 	std::get<1>(clientTuple)->player->MapClientSnapshot(packet);
 }
 
+void ConnectionHandler::ClientRequestGamestate(const ip::udp::endpoint endpoint, const std::vector<unsigned char> packet) const
+{
+	auto clientTuple = getClientByEndpoint(endpoint);
+	if (std::get<0>(clientTuple) == false) {
+		fprintf(stderr, "The Request Gamestate came from a client not registered.\n");
+		return;
+	}
+
+	std::get<1>(clientTuple)->PacketReceived();
+}
+
 const std::tuple<bool, std::shared_ptr<Client>> ConnectionHandler::getClientByEndpoint(const ip::udp::endpoint endpoint) const
 {
 	const std::shared_ptr<Client> dummyValue;
@@ -95,7 +106,6 @@ const std::tuple<bool, std::shared_ptr<Client>> ConnectionHandler::getClientByEn
 	});
 
 	return found != clients.end() ? std::tuple<bool, std::shared_ptr<Client>>(true, *found) : std::tuple<bool, std::shared_ptr<Client>>(false, dummyValue);
-
 }
 
 void ConnectionHandler::Step(const float deltaTime)

@@ -11,7 +11,6 @@ using std::for_each;
 using std::begin;
 using std::end;
 
-
 class ConnectionHandler
 {
 public:
@@ -25,6 +24,8 @@ public:
 	void ClientAcknowledgeKeepAlive(const ip::udp::endpoint endpoint, const std::vector<unsigned char> packet) const;
 
 	void ClientSentSnapshot(const ip::udp::endpoint endpoint, const std::vector<unsigned char> packet) const;
+
+	void ClientRequestGamestate(const ip::udp::endpoint endpoint, const std::vector<unsigned char> packet) const;
 
 	const std::vector<std::shared_ptr<Client>> GetClients() const { return clients; }
 
