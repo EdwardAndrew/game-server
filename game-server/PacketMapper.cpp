@@ -24,7 +24,7 @@ void PacketMapper::Map(const ip::udp::endpoint endpoint, std::vector<unsigned ch
 			ConnectionHandler::getInstance()->ClientSentSnapshot(endpoint, packet);
 			break;
 		case PacketTypes::CLIENT_REQUEST_GAMESTATE:
-			ConnectionHandler::getInstance()->ClientSentSnapshot(endpoint, packet);
+			ConnectionHandler::getInstance()->ClientRequestGamestate(endpoint, packet);
 			break;
 		default:
 			fprintf(stderr, "Failed to map incoming packet\n");
