@@ -10,7 +10,7 @@ UDPSender* UDPSender::getInstance()
 void UDPSender::write_handler(const boost::system::error_code& error, std::size_t bytes_transferred)
 {
 	//fprintf(stdout, "Wrote %d bytes.", bytes_transferred);
-	ioservice.reset();
+
 }
 
 UDPSender::UDPSender()

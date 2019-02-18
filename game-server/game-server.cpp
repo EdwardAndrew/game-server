@@ -1,7 +1,7 @@
 #include "Config.h"
-#include "UDPSender.h"
-#include "UDPReceiver.h"
+#include "UDPCommunication.h"
 #include "MessageQueue.h"
+#include "PacketMapper.h"
 #include "ConnectionHandler.h"
 #include <iostream>
 #include <thread>
@@ -16,30 +16,21 @@ using ms = std::chrono::milliseconds;
 using float_sec = std::chrono::duration<float>;
 using float_time_point = std::chrono::time_point<Time, float_sec>;
 
-void incomingStream()
-{	
-	std::shared_ptr<UDPReceiver> receiver = std::shared_ptr<UDPReceiver>(UDPReceiver::getInstance());
-	receiver->Read();
-
-	while (running)
-	{
-		receiver->Poll();
-		Sleep(1);
-	}
-}
-
-void outgoingStream() {
-	auto sender = std::shared_ptr<UDPSender>(UDPSender::getInstance());
+void dataStream() {
+	auto sender = std::shared_ptr<UDPCommunication>(UDPCommunication::getInstance());
 	auto queue = std::shared_ptr<MessageQueue>(MessageQueue::getInstance());
 
 	while (running)
 	{
+		sender->Read();
 		while (!queue->isEmpty())
 		{
+
 			auto clientMessage = queue->Dequeue();
 			sender->SendDataToClient(clientMessage.first, clientMessage.second);
 			sender->Poll();
 		}
+		sender->Poll();
 		Sleep(1);
 	}
 }
@@ -57,10 +48,11 @@ void waitForStopCommand()
 
 int main()
 {
+	auto packetMapper = std::shared_ptr<PacketMapper>(PacketMapper::getInstance());
 	auto connectionHandler = std::shared_ptr<ConnectionHandler>(ConnectionHandler::getInstance());
 	auto messageQueue = std::shared_ptr<MessageQueue>(MessageQueue::getInstance());
-	std::thread incomingThread(incomingStream);
-	std::thread outgoingThread(outgoingStream);
+	//std::thread incomingThread(incomingStream);
+	std::thread outgoingThread(dataStream);
 	std::thread waitForStopCommandThread(waitForStopCommand);
 
 	float elapsedTime = 0.0f;
@@ -71,13 +63,14 @@ int main()
 	{
 		if (elapsedTime - lastTickTime > (1.0f/TICKRATE))
 		{		
+			packetMapper->MapReceivedPackets();
 			connectionHandler->Step(deltaTime);
 			auto clients = connectionHandler->GetClients();
 			for(auto client : clients)
 			{ 
-				std::vector<unsigned char> packet;
 				if (client->clientState != ClientState::CONNECTED) continue;
 
+				std::vector<unsigned char> packet;
 				packet.push_back(PacketTypes::SERVER_CLIENT_SNAPSHOT);
 				packet.push_back(static_cast<unsigned char>(clients.size() - 1));
 				packet.push_back(static_cast<unsigned char>(client->GetId()));
@@ -107,7 +100,7 @@ int main()
 		//}
 	}
 	outgoingThread.join();
-	incomingThread.join();
+	//incomingThread.join();
 	waitForStopCommandThread.join();
 
 	return 0;

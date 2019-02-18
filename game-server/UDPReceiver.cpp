@@ -11,7 +11,7 @@ UDPReceiver* UDPReceiver::getInstance() {
 void UDPReceiver::read_handler(const boost::system::error_code error, size_t bytes_transferred) {
 	std::vector<unsigned char> data;
 	std::copy(std::begin(recv_buffer), std::begin(recv_buffer) + bytes_transferred, std::back_inserter(data));
-	PacketMapper::getInstance()->Map(endpoint, data);
+	PacketMapper::getInstance()->Enqueue(endpoint, data);
 	Read();
 }
 
