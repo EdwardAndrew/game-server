@@ -9,20 +9,34 @@
 #include "glm/vec3.hpp"
 
 
+
 bool running = true;
 
 using Time = std::chrono::high_resolution_clock;
 using ms = std::chrono::milliseconds;
 using float_sec = std::chrono::duration<float>;
 using float_time_point = std::chrono::time_point<Time, float_sec>;
+std::mutex mtx;
 
-void dataStream() {
+void incomingStream() {
+	mtx.lock();
+	auto receive = std::shared_ptr<UDPCommunication>(UDPCommunication::getInstance());
+	mtx.unlock();
+	receive->Read();
+	while (running)
+	{
+		Sleep(1);
+	}
+}
+
+void outgoingStream() {
+	mtx.lock();
 	auto sender = std::shared_ptr<UDPCommunication>(UDPCommunication::getInstance());
+	mtx.unlock();
 	auto queue = std::shared_ptr<MessageQueue>(MessageQueue::getInstance());
 
 	while (running)
 	{
-		sender->Read();
 		while (!queue->isEmpty())
 		{
 
@@ -48,11 +62,10 @@ void waitForStopCommand()
 
 int main()
 {
-	auto packetMapper = std::shared_ptr<PacketMapper>(PacketMapper::getInstance());
 	auto connectionHandler = std::shared_ptr<ConnectionHandler>(ConnectionHandler::getInstance());
 	auto messageQueue = std::shared_ptr<MessageQueue>(MessageQueue::getInstance());
-	//std::thread incomingThread(incomingStream);
-	std::thread outgoingThread(dataStream);
+	std::thread incomingThread(incomingStream);
+	std::thread outgoingThread(outgoingStream);
 	std::thread waitForStopCommandThread(waitForStopCommand);
 
 	float elapsedTime = 0.0f;
@@ -63,7 +76,6 @@ int main()
 	{
 		if (elapsedTime - lastTickTime > (1.0f/TICKRATE))
 		{		
-			packetMapper->MapReceivedPackets();
 			connectionHandler->Step(deltaTime);
 			auto clients = connectionHandler->GetClients();
 			for(auto client : clients)
@@ -100,7 +112,7 @@ int main()
 		//}
 	}
 	outgoingThread.join();
-	//incomingThread.join();
+	incomingThread.join();
 	waitForStopCommandThread.join();
 
 	return 0;

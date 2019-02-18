@@ -11,6 +11,7 @@ UDPCommunication* UDPCommunication::getInstance()
 
 void UDPCommunication::write_handler(const boost::system::error_code& error, std::size_t bytes_transferred)
 {
+	ioservice.reset();
 }
 
 UDPCommunication::UDPCommunication()
@@ -24,7 +25,7 @@ void UDPCommunication::read_handler(const boost::system::error_code error, size_
 
 	std::vector<unsigned char> data;
 	std::copy(std::begin(recv_buffer), std::begin(recv_buffer) + bytes_transferred, std::back_inserter(data));
-	PacketMapper::getInstance()->Enqueue(endpoint, data);
+	PacketMapper::getInstance()->Map(endpoint, data);
 	Read();
 }
 
@@ -51,7 +52,6 @@ void UDPCommunication::Read()
 
 void UDPCommunication::Poll()
 {
-	ioservice.reset();
 	ioservice.poll();
 }
 

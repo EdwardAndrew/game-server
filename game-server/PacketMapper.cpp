@@ -32,21 +32,6 @@ void PacketMapper::Map(const ip::udp::endpoint endpoint, std::vector<unsigned ch
 	}
 }
 
-void PacketMapper::Enqueue(const ip::udp::endpoint endpoint, const std::vector<unsigned char> packet)
-{
-	packet_queue.push(std::make_pair(endpoint, packet));
-}
-
-void PacketMapper::MapReceivedPackets()
-{
-	while (!packet_queue.empty())
-	{
-		auto endpoint_packet = packet_queue.front();
-		packet_queue.pop();
-		Map(endpoint_packet.first, endpoint_packet.second);
-	}
-}
-
 PacketMapper::PacketMapper()
 {
 }
