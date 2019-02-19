@@ -8,8 +8,6 @@
 #include <chrono>
 #include "glm/vec3.hpp"
 
-
-
 bool running = true;
 
 using Time = std::chrono::high_resolution_clock;

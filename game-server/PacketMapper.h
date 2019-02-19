@@ -2,8 +2,6 @@
 #include "PacketTypes.h"
 #include "boost/asio.hpp"
 #include <vector>
-#include <queue>
-
 
 using namespace boost::asio;
 
