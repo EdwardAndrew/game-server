@@ -33,7 +33,7 @@ void UDPCommunication::SendDataToClient(const std::shared_ptr<Client> client, co
 {
 	if (sizeof(message) >= 1024)
 	{
-		throw std::exception("Message too large to fit in buffer");
+		throw std::exception();
 	}
 
 	scket.async_send_to(buffer(&message[0], message.size()), client->endpoint, 0,
