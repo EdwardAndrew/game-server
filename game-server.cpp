@@ -18,9 +18,7 @@ using float_time_point = std::chrono::time_point<Time, float_sec>;
 std::mutex mtx;
 
 void incomingStream() {
-	mtx.lock();
 	auto receive = std::shared_ptr<UDPCommunication>(UDPCommunication::getInstance());
-	mtx.unlock();
 	receive->Read();
 	while (running)
 	{
@@ -61,11 +59,12 @@ void waitForStopCommand()
 
 int main()
 {
+	UDPCommunication::getInstance();
 	auto connectionHandler = std::shared_ptr<ConnectionHandler>(ConnectionHandler::getInstance());
 	auto messageQueue = std::shared_ptr<MessageQueue>(MessageQueue::getInstance());
-	std::thread incomingThread(incomingStream);
 	std::thread outgoingThread(outgoingStream);
 	std::thread waitForStopCommandThread(waitForStopCommand);
+	std::thread incomingThread(incomingStream);
 
 	float elapsedTime = 0.0f;
 	float deltaTime = 0.0f;
@@ -107,7 +106,7 @@ int main()
 		//int msUntilNextTick = static_cast<unsigned char>(floor((((1.0f / TICKRATE) - (elapsedTime - lastTickTime))*1000)-0.5f));
 		//if (msUntilNextTick > 0)
 		//{
-		//	sleep(msUntilNextTick);
+			sleep(1);
 		//}
 	}
 	outgoingThread.join();
