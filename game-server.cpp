@@ -6,6 +6,7 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
+#include <string>
 #include "glm/vec3.hpp"
 
 bool running = true;
@@ -17,13 +18,11 @@ using float_time_point = std::chrono::time_point<Time, float_sec>;
 std::mutex mtx;
 
 void incomingStream() {
-	mtx.lock();
 	auto receive = std::shared_ptr<UDPCommunication>(UDPCommunication::getInstance());
-	mtx.unlock();
 	receive->Read();
 	while (running)
 	{
-		Sleep(1);
+		sleep(1);
 	}
 }
 
@@ -43,7 +42,7 @@ void outgoingStream() {
 			sender->Poll();
 		}
 		sender->Poll();
-		Sleep(1);
+		sleep(1);
 	}
 }
 
@@ -51,7 +50,7 @@ void waitForStopCommand()
 {
 	fprintf(stdout, "Server is running, enter STOP to quit\n");
 	while (running) {
-		Sleep(100);
+		sleep(100);
 		std::string input;
 		std::cin >> input;
 		if (input == "STOP" || input == "stop" || input == "s" || input == "Stop") running = false;
@@ -60,11 +59,12 @@ void waitForStopCommand()
 
 int main()
 {
+	UDPCommunication::getInstance();
 	auto connectionHandler = std::shared_ptr<ConnectionHandler>(ConnectionHandler::getInstance());
 	auto messageQueue = std::shared_ptr<MessageQueue>(MessageQueue::getInstance());
-	std::thread incomingThread(incomingStream);
 	std::thread outgoingThread(outgoingStream);
 	std::thread waitForStopCommandThread(waitForStopCommand);
+	std::thread incomingThread(incomingStream);
 
 	float elapsedTime = 0.0f;
 	float deltaTime = 0.0f;
@@ -106,7 +106,7 @@ int main()
 		//int msUntilNextTick = static_cast<unsigned char>(floor((((1.0f / TICKRATE) - (elapsedTime - lastTickTime))*1000)-0.5f));
 		//if (msUntilNextTick > 0)
 		//{
-		//	Sleep(msUntilNextTick);
+			sleep(1);
 		//}
 	}
 	outgoingThread.join();

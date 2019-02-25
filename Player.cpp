@@ -1,5 +1,7 @@
 #include "Player.h"
 #include <string>
+#include <cstring>
+
 Player::Player()
 {
 	position = glm::vec3(0.0f, 0.0f, 0.0f);

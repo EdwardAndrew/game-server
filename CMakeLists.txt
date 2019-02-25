@@ -1,4 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
+set (CMAKE_CXX_STANDARD 14)
+SET(CMAKE_CXX_FLAGS "-pthread")
 SET(PROJECT_NAME game-server)
 SET(CMAKE_CONFIGURATION_TYPES Debug)
 SET(BOOST_1_69_PATH "C:/Boost/boost_1_69_0" CACHE PATH "Boost 1.69.0 Path")
@@ -31,7 +33,7 @@ IF (WIN32)
     add_executable(server game-server.cpp ${HEADER_FILES} ${SOURCES})
 ELSE()
 
-    find_package(Boost 1.69.0 )
+    find_package(Boost REQUIRED system)
     if(Boost_FOUND)
       include_directories(${Boost_INCLUDE_DIRS})
     endif()
@@ -39,8 +41,7 @@ ELSE()
 
     add_executable(server game-server.cpp ${HEADER_FILES} ${SOURCES})
 
-    target_link_libraries(server ${Boost_LIBRARIES})
-    target_link_libraries(server glm)
+    target_link_libraries(server LINK_PUBLIC ${Boost_LIBRARIES} glm)
 
 ENDIF()
 
