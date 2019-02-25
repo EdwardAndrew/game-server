@@ -24,8 +24,26 @@ SET(SOURCES
 	game-server.cpp
 )
 
-include_directories("${GLM_PATH}/include")
-include_directories("${BOOST_1_69_PATH}")
-link_directories("${BOOST_1_69_PATH}/stage/lib")
+IF (WIN32)
+    include_directories("${GLM_PATH}/include")
+    include_directories("${BOOST_1_69_PATH}")
+    link_directories("${BOOST_1_69_PATH}/stage/lib")
+    add_executable(server game-server.cpp ${HEADER_FILES} ${SOURCES})
+ELSE()
 
-add_executable(server game-server.cpp ${HEADER_FILES} ${SOURCES})
+    find_package(Boost 1.69.0 )
+    if(Boost_FOUND)
+      include_directories(${Boost_INCLUDE_DIRS})
+    endif()
+    find_package(glm)
+
+    add_executable(server game-server.cpp ${HEADER_FILES} ${SOURCES})
+
+    target_link_libraries(server ${Boost_LIBRARIES})
+    target_link_libraries(server glm)
+
+ENDIF()
+
+
+
+
