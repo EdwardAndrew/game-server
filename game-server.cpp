@@ -53,7 +53,6 @@ void waitForStopCommand()
 int main()
 {
 	UDPCommunication::getInstance();
-	MessageQueue::getInstance();
 	
 	auto connectionHandler = std::shared_ptr<ConnectionHandler>(ConnectionHandler::getInstance());
 	auto messageQueue = std::shared_ptr<MessageQueue>(MessageQueue::getInstance());
