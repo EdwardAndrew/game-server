@@ -15,21 +15,14 @@ using Time = std::chrono::high_resolution_clock;
 using ms = std::chrono::milliseconds;
 using float_sec = std::chrono::duration<float>;
 using float_time_point = std::chrono::time_point<Time, float_sec>;
-std::mutex mtx;
 
 void incomingStream() {
 	auto receive = std::shared_ptr<UDPCommunication>(UDPCommunication::getInstance());
 	receive->Read();
-	while (running)
-	{
-		sleep(1);
-	}
 }
 
 void outgoingStream() {
-	mtx.lock();
 	auto sender = std::shared_ptr<UDPCommunication>(UDPCommunication::getInstance());
-	mtx.unlock();
 	auto queue = std::shared_ptr<MessageQueue>(MessageQueue::getInstance());
 
 	while (running)
@@ -48,7 +41,7 @@ void outgoingStream() {
 
 void waitForStopCommand()
 {
-	fprintf(stdout, "Server is running, enter STOP to quit\n");
+	printf("Server is running, enter STOP to quit\n");
 	while (running) {
 		sleep(100);
 		std::string input;
@@ -60,6 +53,8 @@ void waitForStopCommand()
 int main()
 {
 	UDPCommunication::getInstance();
+	MessageQueue::getInstance();
+	
 	auto connectionHandler = std::shared_ptr<ConnectionHandler>(ConnectionHandler::getInstance());
 	auto messageQueue = std::shared_ptr<MessageQueue>(MessageQueue::getInstance());
 	std::thread outgoingThread(outgoingStream);
